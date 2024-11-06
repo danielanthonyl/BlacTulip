@@ -38,18 +38,28 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
 	// Widgets
+	// Widgets/InteractionPrompt
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widget)
 	TSubclassOf<class UUserWidget> InteractionPromptWidgetClass;
-
+	
 	UPROPERTY()
 	UUserWidget* InteractionPromptWidget;
+
+	// Widgets/Dialogue	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widget)
+	TSubclassOf<class UUserWidget> DialogueWidgetClass;
+
+	UPROPERTY()
+	UUserWidget* DialogueWidget;
 
 	// Interactions
 	virtual void Interact(class ABlacTulipCharacter& Character) override;
 	virtual void EndInteraction() override;
 	virtual ABlacTulipCharacter* GetOverlappingCharacter() override;
 
+	UPROPERTY()
 	ABlacTulipCharacter* OverlappingCharacter;
+
 	
 	
 protected:

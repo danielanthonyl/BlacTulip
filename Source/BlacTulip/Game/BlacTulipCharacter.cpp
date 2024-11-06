@@ -119,20 +119,22 @@ void ABlacTulipCharacter::SprintControl(const FInputActionInstance& Instance)
 
 void ABlacTulipCharacter::InteractStartControl(const FInputActionValue& Value)
 {
-	bInteractActionPressed = true;
-
 	if(InteractiveNPC != nullptr)
 	{
 		if(InteractiveNPC->GetOverlappingCharacter() == this)
 		{
 			InteractiveNPC->Interact(*this);
+
+			const FInputModeUIOnly InputModeUIOnly;
+			APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+			PlayerController->SetInputMode(InputModeUIOnly);
+			PlayerController->bShowMouseCursor = true;
 		}
 	}
 }
 
 void ABlacTulipCharacter::InteractEndControl(const FInputActionValue& Value)
 {
-	bInteractActionPressed = false;
 }
 
 void ABlacTulipCharacter::SetInteractiveNPC(IBlacTulipInteractionInterface* NPC)

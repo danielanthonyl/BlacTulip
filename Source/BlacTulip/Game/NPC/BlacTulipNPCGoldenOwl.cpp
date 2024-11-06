@@ -15,10 +15,7 @@ ABlacTulipNPCGoldenOwl::ABlacTulipNPCGoldenOwl()
 	CollisionSphere = CreateDefaultSubobject<USphereComponent>("CollisionSphere");
 	CollisionSphere->SetupAttachment(RootComponent);
 	CollisionSphere->SetSphereRadius(300.0f);
-
 }
-
-
 
 // Called when the game starts or when spawned
 void ABlacTulipNPCGoldenOwl::BeginPlay()
@@ -102,7 +99,21 @@ void ABlacTulipNPCGoldenOwl::SetupPlayerInputComponent(UInputComponent* PlayerIn
 
 void ABlacTulipNPCGoldenOwl::Interact(class ABlacTulipCharacter& Character)
 {
-	UE_LOG(LogTemp, Warning, TEXT("TESTINGG interaction"))
+	if(DialogueWidgetClass)
+	{
+		if(!DialogueWidget->IsValidLowLevel())
+		{
+			DialogueWidget = CreateWidget<UUserWidget>(GetWorld(), DialogueWidgetClass);	
+		}
+
+		if(DialogueWidget)
+		{
+			if(!DialogueWidget->IsInViewport())
+			{
+				DialogueWidget->AddToViewport();
+			}
+		}
+	}
 }
 
 void ABlacTulipNPCGoldenOwl::EndInteraction()
@@ -111,6 +122,6 @@ void ABlacTulipNPCGoldenOwl::EndInteraction()
 
 ABlacTulipCharacter* ABlacTulipNPCGoldenOwl::GetOverlappingCharacter()
 {
-	return OverlappingCharacter;	
+	return OverlappingCharacter;
 }
 
