@@ -15,6 +15,13 @@ ABlacTulipNPCGoldenOwl::ABlacTulipNPCGoldenOwl()
 	CollisionSphere = CreateDefaultSubobject<USphereComponent>("CollisionSphere");
 	CollisionSphere->SetupAttachment(RootComponent);
 	CollisionSphere->SetSphereRadius(300.0f);
+
+	NameWidget = CreateDefaultSubobject<UWidgetComponent>("NameWidget");
+	NameWidget->SetupAttachment(RootComponent);
+
+	NameWidget->SetWidgetSpace(EWidgetSpace::World);
+	NameWidget->SetDrawSize(FVector2d(150.0f, 50.0f));
+	NameWidget->SetPivot(FVector2d(0.25f, 0.25f));
 }
 
 // Called when the game starts or when spawned
@@ -24,6 +31,7 @@ void ABlacTulipNPCGoldenOwl::BeginPlay()
 
 	CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &ABlacTulipNPCGoldenOwl::OnOverlapBegin);
 	CollisionSphere->OnComponentEndOverlap.AddDynamic(this, &ABlacTulipNPCGoldenOwl::OnOverlapEnd);
+	
 }
 
 void ABlacTulipNPCGoldenOwl::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -88,6 +96,18 @@ void ABlacTulipNPCGoldenOwl::OnOverlapEnd(UPrimitiveComponent* OverlappedCompone
 void ABlacTulipNPCGoldenOwl::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if(NameWidget && NameWidget->GetOwner())
+	{
+		FVector CameraLocation = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetCameraLocation();
+		FVector WidgetLocation = NameWidget->GetComponentLocation();
+
+		FVector DirectionToCamera = CameraLocation - WidgetLocation;
+
+		FRotator LookAtRotation = DirectionToCamera.Rotation();
+
+		NameWidget->SetWorldRotation(LookAtRotation);
+	}
 }
 
 // Called to bind functionality to input

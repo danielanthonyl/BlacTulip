@@ -4,10 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "BlacTulip/Game/Interfaces/BlacTulipInteractionInterface.h"
+#include "Components/WidgetComponent.h"
 #include "GameFramework/Character.h"
 #include "Components/SphereComponent.h"
 
 #include "BlacTulipNPCGoldenOwl.generated.h"
+
 
 UCLASS()
 class BLACTULIP_API ABlacTulipNPCGoldenOwl : public ACharacter, public IBlacTulipInteractionInterface
@@ -51,6 +53,10 @@ public:
 
 	UPROPERTY()
 	UUserWidget* DialogueWidget;
+
+	// Widgets/Name
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widget)
+	UWidgetComponent* NameWidget;
 
 	// Interactions
 	virtual void Interact(class ABlacTulipCharacter& Character) override;

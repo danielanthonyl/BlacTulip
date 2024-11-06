@@ -129,7 +129,14 @@ void ABlacTulipCharacter::InteractStartControl(const FInputActionValue& Value)
 			APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
 			PlayerController->SetInputMode(InputModeUIOnly);
 			PlayerController->bShowMouseCursor = true;
+		} else
+		{
+			
+		UE_LOG(LogTemp, Warning, TEXT("character not overlaping npc"))
 		}
+	} else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("not interactive npc"))
 	}
 }
 
