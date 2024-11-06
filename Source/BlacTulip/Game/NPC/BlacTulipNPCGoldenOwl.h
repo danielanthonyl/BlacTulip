@@ -3,13 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BlacTulip/Game/Interfaces/BlacTulipInteractionInterface.h"
 #include "GameFramework/Character.h"
 #include "Components/SphereComponent.h"
 
 #include "BlacTulipNPCGoldenOwl.generated.h"
 
 UCLASS()
-class BLACTULIP_API ABlacTulipNPCGoldenOwl : public ACharacter
+class BLACTULIP_API ABlacTulipNPCGoldenOwl : public ACharacter, public IBlacTulipInteractionInterface
 {
 	GENERATED_BODY()
 
@@ -17,13 +18,9 @@ public:
 	// Sets default values for this character's properties
 	ABlacTulipNPCGoldenOwl();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	
 
 	// Collision
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Collision)
@@ -46,5 +43,17 @@ public:
 
 	UPROPERTY()
 	UUserWidget* InteractionPromptWidget;
+
+	// Interactions
+	virtual void Interact(class ABlacTulipCharacter& Character) override;
+	virtual void EndInteraction() override;
+	virtual ABlacTulipCharacter* GetOverlappingCharacter() override;
+
+	ABlacTulipCharacter* OverlappingCharacter;
+	
+	
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 
 };

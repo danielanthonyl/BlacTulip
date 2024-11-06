@@ -18,6 +18,8 @@ ABlacTulipNPCGoldenOwl::ABlacTulipNPCGoldenOwl()
 
 }
 
+
+
 // Called when the game starts or when spawned
 void ABlacTulipNPCGoldenOwl::BeginPlay()
 {
@@ -34,6 +36,14 @@ void ABlacTulipNPCGoldenOwl::OnOverlapBegin(UPrimitiveComponent* OverlappedCompo
 	{
 		if (OtherActor->IsA(ABlacTulipCharacter::StaticClass()))
 		{
+			// emit presence of NPC to character
+			if (ABlacTulipCharacter* Character = Cast<ABlacTulipCharacter>(OtherActor))
+			{
+				OverlappingCharacter = Character;
+				Character->SetInteractiveNPC(this);
+			}
+				
+			// create widget	
 			if (InteractionPromptWidgetClass)
 			{
 				if (!InteractionPromptWidget->IsValidLowLevel())
@@ -60,6 +70,9 @@ void ABlacTulipNPCGoldenOwl::OnOverlapEnd(UPrimitiveComponent* OverlappedCompone
 	{
 		if (OtherActor->IsA(ABlacTulipCharacter::StaticClass()))
 		{
+			OverlappingCharacter = nullptr;
+
+			// close interaction
 			if (InteractionPromptWidgetClass)
 			{
 				if (InteractionPromptWidget)
@@ -84,7 +97,20 @@ void ABlacTulipNPCGoldenOwl::Tick(float DeltaTime)
 void ABlacTulipNPCGoldenOwl::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	
 
+}
+
+void ABlacTulipNPCGoldenOwl::Interact(class ABlacTulipCharacter& Character)
+{
+	UE_LOG(LogTemp, Warning, TEXT("TESTINGG interaction"))
+}
+
+void ABlacTulipNPCGoldenOwl::EndInteraction()
+{
+}
+
+ABlacTulipCharacter* ABlacTulipNPCGoldenOwl::GetOverlappingCharacter()
+{
+	return OverlappingCharacter;	
 }
 

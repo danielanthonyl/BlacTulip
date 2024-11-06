@@ -56,6 +56,8 @@ void ABlacTulipCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+
+
 // Called to bind functionality to input
 void ABlacTulipCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -69,9 +71,13 @@ void ABlacTulipCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 			EnhancedInputComponent->BindAction(InputMove, ETriggerEvent::Triggered, this,&ABlacTulipCharacter::MoveControl);
 			EnhancedInputComponent->BindAction(InputLook, ETriggerEvent::Triggered, this,&ABlacTulipCharacter::LookControl);
 			EnhancedInputComponent->BindAction(InputJump, ETriggerEvent::Triggered, this, &ABlacTulipCharacter::Jump);
+			EnhancedInputComponent->BindAction(InputInteract, ETriggerEvent::Triggered, this, &ABlacTulipCharacter::InteractStartControl);
+			EnhancedInputComponent->BindAction(InputInteract, ETriggerEvent::Completed, this, &ABlacTulipCharacter::InteractEndControl);
+			
 			EnhancedInputComponent->BindAction(InputSprint, ETriggerEvent::Triggered, this, &ABlacTulipCharacter::SprintControl);
 			EnhancedInputComponent->BindAction(InputSprint, ETriggerEvent::Completed, this, &ABlacTulipCharacter::SprintControl);
 			EnhancedInputComponent->BindAction(InputSprint, ETriggerEvent::Canceled, this, &ABlacTulipCharacter::SprintControl);
+			
 		}
 	}
 }
@@ -101,10 +107,7 @@ void ABlacTulipCharacter::LookControl(const FInputActionValue& Value)
 
 void ABlacTulipCharacter::SprintControl(const FInputActionInstance& Instance)
 {
-	const ETriggerEvent TriggeredEvent = Instance.GetTriggerEvent();
-	
-	
-	if (TriggeredEvent == ETriggerEvent::Triggered)
+	if (const ETriggerEvent TriggeredEvent = Instance.GetTriggerEvent(); TriggeredEvent == ETriggerEvent::Triggered)
 	{
 		GetCharacterMovement()->MaxWalkSpeed = 1000;
 	}
@@ -113,6 +116,30 @@ void ABlacTulipCharacter::SprintControl(const FInputActionInstance& Instance)
 		GetCharacterMovement()->MaxWalkSpeed = 500;
 	} 
 }
+
+void ABlacTulipCharacter::InteractStartControl(const FInputActionValue& Value)
+{
+	bInteractActionPressed = true;
+
+	if(InteractiveNPC != nullptr)
+	{
+		if(InteractiveNPC->GetOverlappingCharacter() == this)
+		{
+			InteractiveNPC->Interact(*this);
+		}
+	}
+}
+
+void ABlacTulipCharacter::InteractEndControl(const FInputActionValue& Value)
+{
+	bInteractActionPressed = false;
+}
+
+void ABlacTulipCharacter::SetInteractiveNPC(IBlacTulipInteractionInterface* NPC)
+{
+	InteractiveNPC = NPC;
+}
+
 
 
 

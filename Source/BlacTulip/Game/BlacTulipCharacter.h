@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Interfaces/BlacTulipInteractionInterface.h"
 
 #include "BlacTulipCharacter.generated.h"
 
@@ -33,12 +34,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
 	UCameraComponent* ThirdPersonCameraCameraComponent;
 
-	// Movement
+	// Inputs
+	// Inputs/Movements
 	void MoveControl(const FInputActionValue& Value);
 	void LookControl(const FInputActionValue& Value);
 	void SprintControl(const FInputActionInstance& Instance);
 	
-	// Movement/Inputs
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input)
 	UInputMappingContext* InputMappingContext;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input)
@@ -50,7 +51,20 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input)
 	UInputAction* InputSprint;
 
+	//Inputs/interactions
+	void InteractStartControl(const FInputActionValue & Value);
+	void InteractEndControl(const FInputActionValue & Value);
+	void SetInteractiveNPC(IBlacTulipInteractionInterface* NPC);
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input)
+	UInputAction* InputInteract;
+
+	IBlacTulipInteractionInterface* InteractiveNPC;
+
+	bool bInteractActionPressed = false;
+	
+
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	
 };
